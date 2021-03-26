@@ -56,7 +56,9 @@ router.post("/register", checkUsernameAvailable, (req, res) => {
 });
 
 router.post("/login", checkUsernameExists, (req, res) => {
-  if (req.body) {
+  if (!req.body.username || !req.body.password) {
+    res.status(400).json({ message: "username and password required" });
+  } else {
     const { username, password } = req.body;
 
     Auth.findBy({ username })
@@ -71,8 +73,6 @@ router.post("/login", checkUsernameExists, (req, res) => {
       .catch((err) => {
         res.status(500).json(err);
       });
-  } else {
-    res.status(400).json({ message: "username and password required" });
   }
   /*
     IMPLEMENT
